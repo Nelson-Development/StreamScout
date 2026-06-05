@@ -1,0 +1,6 @@
+// SCSS variables — import with: @use 'variables' as var;
+// Use for values that need to be available at compile time (breakpoints, mixins).
+// Runtime design tokens live in src/theme/tokens.scss as CSS custom properties.
+
+$mobile-breakpoint: 768px;
+$tablet-breakpoint: 1024px;

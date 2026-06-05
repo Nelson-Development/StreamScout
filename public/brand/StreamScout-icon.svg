@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
+  <defs>
+    <linearGradient id="playM" x1="180" y1="150" x2="360" y2="370" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A78BFA"></stop><stop offset="0.55" stop-color="#8B5CF6"></stop><stop offset="1" stop-color="#7C3AED"></stop>
+    </linearGradient>
+    <radialGradient id="sweepM" cx="256" cy="256" r="196" gradientUnits="userSpaceOnUse">
+      <stop offset="0.2" stop-color="#8B5CF6" stop-opacity="0.55"></stop><stop offset="1" stop-color="#8B5CF6" stop-opacity="0"></stop>
+    </radialGradient>
+  </defs>
+  <path d="M256 256 L447.7 215.3 A196 196 0 0 0 323.0 71.8 Z" fill="url(#sweepM)"></path>
+  <line x1="256" y1="256" x2="447.7" y2="215.3" stroke="#A78BFA" stroke-width="8" stroke-linecap="round" stroke-opacity="0.9"></line>
+  <circle cx="256" cy="256" r="196" stroke="#8B5CF6" stroke-opacity="0.28" stroke-width="10" fill="none"></circle>
+  <circle cx="256" cy="256" r="128" stroke="#8B5CF6" stroke-opacity="0.14" stroke-width="9" fill="none"></circle>
+  <path d="M204 168 L204 344 L356 256 Z" fill="url(#playM)" stroke="url(#playM)" stroke-width="20" stroke-linejoin="round"></path></svg>

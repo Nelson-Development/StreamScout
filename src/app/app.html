@@ -1,0 +1,36 @@
+@if (supabase.currentUser()) {
+  <nav class="navbar">
+    <a class="brand" routerLink="/dashboard" (click)="closeMenu()">
+      <img src="brand/StreamScout-lockup-horizontal.svg" alt="StreamScout" class="brand-logo" />
+    </a>
+
+    <!-- Desktop links -->
+    <div class="nav-links">
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/search"    routerLinkActive="active">Search</a>
+      <a routerLink="/settings"  routerLinkActive="active">Settings</a>
+      <a routerLink="/game"      routerLinkActive="active">Game</a>
+    </div>
+    <button class="sign-out desktop-only" (click)="signOut()">Sign Out</button>
+
+    <!-- Hamburger -->
+    <button class="hamburger" (click)="menuOpen.update(v => !v)" [class.open]="menuOpen()">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile menu -->
+  @if (menuOpen()) {
+    <div class="mobile-menu">
+      <a routerLink="/dashboard" routerLinkActive="active" (click)="closeMenu()">Dashboard</a>
+      <a routerLink="/search"    routerLinkActive="active" (click)="closeMenu()">Search</a>
+      <a routerLink="/settings"  routerLinkActive="active" (click)="closeMenu()">Settings</a>
+      <a routerLink="/game"      routerLinkActive="active" (click)="closeMenu()">Game</a>
+      <button class="sign-out-mobile" (click)="signOut()">Sign Out</button>
+    </div>
+  }
+}
+
+<main>
+  <router-outlet />
+</main>

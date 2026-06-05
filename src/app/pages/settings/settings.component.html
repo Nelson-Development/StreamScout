@@ -1,0 +1,61 @@
+<div class="settings-page">
+  <div class="page-header">
+    <h2>My Streaming Services</h2>
+    <p>Select your region and the services you currently subscribe to — we'll highlight matches when you search.</p>
+  </div>
+
+  <!-- Region selector -->
+  <div class="section-label">Your Region</div>
+  <div class="region-grid">
+    @for (r of regions; track r.code) {
+      <button
+        class="region-card"
+        [class.selected]="r.code === selectedRegion()"
+        (click)="onRegionChange(r.code)"
+        type="button"
+      >
+        {{ r.name }}
+        @if (r.code === selectedRegion()) {
+          <div class="check">✓</div>
+        }
+      </button>
+    }
+  </div>
+
+  <!-- Streaming providers -->
+  <div class="section-label">Your Services</div>
+  @if (loadingProviders()) {
+    <div class="providers-loading">Loading services for your region…</div>
+  } @else if (providers().length === 0) {
+    <div class="providers-loading">No providers found for this region.</div>
+  } @else {
+    <div class="provider-grid">
+      @for (provider of providers(); track provider.id) {
+        <button
+          class="provider-card"
+          [class.selected]="provider.selected"
+          (click)="toggle(provider.id)"
+          type="button"
+        >
+          <img [src]="getLogoUrl(provider.logo)" [alt]="provider.name" />
+          <span>{{ provider.name }}</span>
+          @if (provider.selected) {
+            <div class="check">✓</div>
+          }
+        </button>
+      }
+    </div>
+  }
+
+  <div class="actions">
+    <button class="btn-primary" (click)="save()" [disabled]="saving()">
+      {{ saving() ? 'Saving…' : 'Save Preferences' }}
+    </button>
+    @if (savedMessage()) {
+      <span class="saved-msg">Saved</span>
+    }
+    @if (saveError()) {
+      <span class="error-msg">Failed to save — please try again</span>
+    }
+  </div>
+</div>

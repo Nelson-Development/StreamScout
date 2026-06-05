@@ -1,0 +1,88 @@
+<div class="search-page">
+  <div class="search-hero">
+    <h1>Find something to watch</h1>
+    <p>Search across every platform available in South Africa</p>
+    <div class="search-bar">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input
+        type="search"
+        [(ngModel)]="query"
+        (ngModelChange)="onInput()"
+        placeholder="Search movies & TV shows…"
+        class="search-input"
+        autofocus
+      />
+      @if (loading()) {
+        <span class="spinner"></span>
+      }
+    </div>
+  </div>
+
+  <div class="results">
+    @for (result of results(); track result.id) {
+      <div class="result-card" [class.match]="result.isMatch">
+        <img
+          class="poster"
+          [src]="getPosterUrl(result.poster_path)"
+          [alt]="result.displayTitle"
+          (error)="onImageError($event)"
+        />
+        <div class="info">
+          <div class="title-row">
+            <h3>{{ result.displayTitle }}</h3>
+            <span class="media-badge" [class]="result.media_type">{{ result.media_type }}</span>
+            @if (result.displayDate) {
+              <span class="year">{{ result.displayDate | slice: 0 : 4 }}</span>
+            }
+          </div>
+
+          <p class="overview">{{ result.overview | slice: 0 : 180 }}{{ result.overview.length > 180 ? '…' : '' }}</p>
+
+          <div class="card-footer">
+            <div class="providers">
+              @if (result.availableOn.length > 0) {
+                @for (p of result.availableOn; track p.provider_id) {
+                  <img
+                    class="provider-logo"
+                    [src]="getLogoUrl(p.logo_path)"
+                    [alt]="p.provider_name"
+                    [title]="p.provider_name"
+                    (error)="onLogoError($event)"
+                  />
+                }
+              } @else {
+                <span class="no-provider">Not streaming in ZA</span>
+              }
+            </div>
+
+            <div class="actions">
+              @if (result.isMatch) {
+                <span class="match-pill">✓ On your services</span>
+              }
+              <button class="btn-watchlist" (click)="addToWatchlist(result)">
+                + Watchlist
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (!loading() && query && results().length === 0) {
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <p>No results for <strong>"{{ query }}"</strong></p>
+      </div>
+    }
+
+    @if (!loading() && !query) {
+      <div class="hint-state">
+        <p>Start typing to search…</p>
+      </div>
+    }
+  </div>
+</div>

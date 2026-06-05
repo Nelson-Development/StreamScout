@@ -1,0 +1,174 @@
+<div class="dashboard">
+
+  <!-- Tab toggle + filter -->
+  <div class="tab-bar">
+    <button class="tab" [class.active]="activeTab() === 'movie'" (click)="setTab('movie')">Movies</button>
+    <button class="tab" [class.active]="activeTab() === 'tv'"    (click)="setTab('tv')">Series</button>
+
+    <div class="filters">
+      <!-- Genre dropdown -->
+      <div class="genre-dropdown">
+        <button class="filter-btn" [class.active]="selectedGenres().length > 0"
+                (click)="genreDropdownOpen.set(!genreDropdownOpen())">
+          Genre
+          @if (selectedGenres().length > 0) {
+            <span class="count-badge">{{ selectedGenres().length }}</span>
+          } @else {
+            <span class="chevron">▾</span>
+          }
+        </button>
+
+        @if (genreDropdownOpen()) {
+          <div class="genre-backdrop" (click)="genreDropdownOpen.set(false)"></div>
+          <div class="genre-panel">
+            <div class="genre-panel-header">
+              <span>Genres</span>
+              @if (selectedGenres().length > 0) {
+                <button class="clear-btn" (click)="clearGenres()">Clear all</button>
+              }
+            </div>
+            <div class="genre-list">
+              @for (genre of genres(); track genre.id) {
+                <label class="genre-item" [class.checked]="isGenreSelected(genre.id)">
+                  <input type="checkbox" [checked]="isGenreSelected(genre.id)"
+                         (change)="toggleGenre(genre.id)" />
+                  <span class="genre-name">{{ genre.name }}</span>
+                  @if (isGenreSelected(genre.id)) {
+                    <span class="genre-check">✓</span>
+                  }
+                </label>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- My services toggle -->
+      <button class="services-toggle" [class.active]="myServicesOnly()" (click)="toggleMyServices()">
+        <span class="toggle-dot"></span>
+        My services only
+      </button>
+    </div>
+  </div>
+
+  <!-- Active genre chips -->
+  @if (selectedGenreLabels().length > 0) {
+    <div class="genre-chips">
+      @for (label of selectedGenreLabels(); track label) {
+        <span class="chip">{{ label }}</span>
+      }
+    </div>
+  }
+
+  <!-- Watchlist row -->
+  @if (watchlist().length > 0) {
+    <section class="content-section">
+      <div class="section-header">
+        <h2>My Watchlist</h2>
+      </div>
+      <div class="scroll-row">
+        @for (item of watchlist(); track item.movie_id) {
+          <div class="poster-card" [class.available]="item.isAvailableNow"
+               (mouseenter)="onHover(item.movie_id, item.media_type)" (mouseleave)="onLeave()"
+               (click)="onCardTap(item.movie_id, item.media_type)">
+            <img [src]="getPosterUrl(item.poster_path)" [alt]="item.title" loading="lazy"
+                 (error)="onImageError($event)" />
+            <div class="card-overlay">
+              @if (hoveredId() === item.movie_id) {
+                @if (hoveredProviders().length > 0) {
+                  <div class="card-providers">
+                    @for (p of hoveredProviders(); track p.provider_id) {
+                      <img [src]="getLogoUrl(p.logo_path)" [alt]="p.provider_name" [title]="p.provider_name"
+                           (error)="onLogoError($event)" />
+                    }
+                  </div>
+                } @else if (hoveredLoaded()) {
+                  <div class="card-providers"><span class="na-label">N/A</span></div>
+                }
+              }
+              <div class="card-bottom">
+                <p class="card-title">{{ item.title }}</p>
+                @if (item.isAvailableNow) {
+                  <span class="available-pill">✓ Available</span>
+                }
+                <button class="btn-remove" (click)="removeFromWatchlist(item); $event.stopPropagation()">Remove</button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- Discovery sections -->
+  @if (loading()) {
+    <div class="loading-grid">
+      @for (s of [1,2,3,4,5]; track s) {
+        <div class="skeleton-section">
+          <div class="skeleton-label"></div>
+          <div class="skeleton-row">
+            @for (c of [1,2,3,4,5,6,7]; track c) {
+              <div class="skeleton-card"></div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  } @else if (hasAnyContent()) {
+    @for (section of sections(); track section.title) {
+      @if (section.items.length > 0) {
+        <section class="content-section">
+          <div class="section-header">
+            <h2>{{ section.title }}</h2>
+          </div>
+          <div class="scroll-row">
+            @for (item of section.items; track item.id) {
+              <div class="poster-card" [class.in-watchlist]="isInWatchlist(item.id)"
+                   (mouseenter)="onHover(item.id, item.media_type)" (mouseleave)="onLeave()"
+                   (click)="onCardTap(item.id, item.media_type)">
+                <img [src]="getPosterUrl(item.poster_path)" [alt]="getTitle(item)" loading="lazy"
+                     (error)="onImageError($event)" />
+                <div class="card-overlay">
+                  @if (hoveredId() === item.id) {
+                    @if (hoveredProviders().length > 0) {
+                      <div class="card-providers">
+                        @for (p of hoveredProviders(); track p.provider_id) {
+                          <img [src]="getLogoUrl(p.logo_path)" [alt]="p.provider_name" [title]="p.provider_name"
+                               (error)="onLogoError($event)" />
+                        }
+                      </div>
+                    } @else if (hoveredLoaded()) {
+                      <div class="card-providers"><span class="na-label">N/A</span></div>
+                    }
+                  }
+                  <div class="card-bottom">
+                    <p class="card-title">{{ getTitle(item) }}</p>
+                    <div class="card-meta">
+                      <span class="year">{{ getYear(item) }}</span>
+                      @if (getRating(item)) {
+                        <span class="rating">★ {{ getRating(item) }}</span>
+                      }
+                    </div>
+                    @if (!isInWatchlist(item.id)) {
+                      <button class="btn-add" (click)="addToWatchlist(item); $event.stopPropagation()">+ Watchlist</button>
+                    } @else {
+                      <span class="in-list-label">In Watchlist</span>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      }
+    }
+  } @else {
+    <div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <p>No results for these filters. Try changing genre or toggling your services.</p>
+    </div>
+  }
+
+</div>

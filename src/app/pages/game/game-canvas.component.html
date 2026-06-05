@@ -1,0 +1,140 @@
+<div class="game-page">
+  <div class="game-frame">
+
+  <!-- HUD bar above canvas -->
+  <div class="hud" [class.fuel-critical]="gs.fuelPercent() <= 25">
+    <div class="hud-stat">
+      <span class="hud-label">FUEL</span>
+      <div class="bar">
+        <div class="bar-fill fuel" [style.width.%]="gs.fuelPercent()"
+             [class.low]="gs.fuelPercent() < 25"></div>
+      </div>
+      <span class="hud-value" [class.warn]="gs.fuelPercent() < 25">{{ gs.fuelPercent() }}%</span>
+    </div>
+
+    <div class="hud-stat">
+      <span class="hud-label">HULL</span>
+      <div class="bar">
+        <div class="bar-fill hull" [style.width.%]="gs.hullPercent()"
+             [class.low]="gs.hullPercent() < 25"></div>
+      </div>
+      <span class="hud-value">{{ gs.hullPercent() }}%</span>
+    </div>
+
+    <div class="hud-center">
+      <span class="depth-label">DEPTH</span>
+      <span class="depth-value">{{ gs.depth() }}m</span>
+    </div>
+
+    <div class="hud-right">
+      <span class="cash">${{ gs.cash() }}</span>
+      <span class="cargo-pill" [class.full]="gs.cargoFull()">
+        ⬡ {{ gs.cargoCount() }} / {{ gs.maxCargo() }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Canvas -->
+  <div class="game-wrapper">
+    <div #gameContainer class="game-container"></div>
+
+    <!-- Shop overlay — triggered by pressing I on surface -->
+    @if (gs.shopOpen() && !gs.gameOver()) {
+      <div class="shop-overlay left">
+        <div class="shop-panel">
+          <div class="shop-header">
+            <h3>Upgrade Garage</h3>
+            <div class="shop-header-right">
+              <span class="shop-cash">${{ gs.cash() }}</span>
+              <span class="shop-close-hint">ESC to close</span>
+            </div>
+          </div>
+
+          <div class="upgrade-grid">
+            @for (key of gs.upgradeKeys; track key) {
+              <div class="upgrade-card" [class.maxed]="gs.upgrades()[key] >= gs.MAX_UPGRADE_LEVEL">
+                <div class="upgrade-info">
+                  <span class="upgrade-name">{{ gs.UPGRADE_LABELS[key] }}</span>
+                  <span class="upgrade-desc">{{ gs.UPGRADE_DESC[key] }}</span>
+                </div>
+                <div class="upgrade-right">
+                  <div class="upgrade-pips">
+                    @for (pip of [0,1,2,3]; track pip) {
+                      <span class="pip" [class.filled]="pip < gs.upgrades()[key]"></span>
+                    }
+                  </div>
+                  @if (gs.upgrades()[key] < gs.MAX_UPGRADE_LEVEL) {
+                    <button class="btn-upgrade" [disabled]="!gs.canAfford(key)" (click)="upgrade(key)">
+                      ${{ gs.nextUpgradeCost(key) }}
+                    </button>
+                  } @else {
+                    <span class="maxed-label">MAX</span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+
+          @if (gs.cargoCount() > 0) {
+            <div class="sell-banner">
+              Cargo sells automatically on landing &nbsp;·&nbsp;
+              <strong>+${{ gs.cargoValue() }}</strong> ready
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Surface hint -->
+    @if (gs.isOnSurface() && !gs.shopOpen() && !gs.gameOver()) {
+      <div class="surface-hint">
+        <span>[ I ] Open shop</span>
+        <span>Drive right to refuel</span>
+      </div>
+    }
+
+    <!-- Virtual D-pad (mobile only) -->
+    @if (!gs.gameOver()) {
+      <div class="dpad">
+        <div class="dpad-row">
+          <button class="dpad-btn thrust"
+                  (touchstart)="setTouch('up', true)"   (touchend)="setTouch('up', false)"
+                  (mousedown)="setTouch('up', true)"     (mouseup)="setTouch('up', false)">▲</button>
+        </div>
+        <div class="dpad-row">
+          <button class="dpad-btn"
+                  (touchstart)="setTouch('left', true)"  (touchend)="setTouch('left', false)"
+                  (mousedown)="setTouch('left', true)"   (mouseup)="setTouch('left', false)">◀</button>
+          <button class="dpad-btn drill-down"
+                  (touchstart)="setTouch('down', true)"  (touchend)="setTouch('down', false)"
+                  (mousedown)="setTouch('down', true)"   (mouseup)="setTouch('down', false)">▼</button>
+          <button class="dpad-btn"
+                  (touchstart)="setTouch('right', true)" (touchend)="setTouch('right', false)"
+                  (mousedown)="setTouch('right', true)"  (mouseup)="setTouch('right', false)">▶</button>
+        </div>
+      </div>
+    }
+
+    <!-- Game over overlay -->
+    @if (gs.gameOver()) {
+      <div class="overlay-dark">
+        <div class="game-over-panel">
+          @if (gs.gameOverReason() === 'fuel') {
+            <h2 class="reason-fuel">💥 Out of Fuel</h2>
+            <p>Your drill exploded deep underground.</p>
+          } @else {
+            <h2 class="reason-hull">Hull Destroyed</h2>
+            <p>Your drill couldn't take the damage.</p>
+          }
+          <p>Depth reached: <strong>{{ gs.depth() }}m</strong></p>
+          <p>Cash saved: <strong>${{ gs.cash() }}</strong></p>
+          <button class="btn-restart" (click)="restartGame()">Try Again</button>
+        </div>
+      </div>
+    }
+  </div>
+
+  </div><!-- /game-frame -->
+
+  <p class="controls-hint">← → move &amp; drill &nbsp;·&nbsp; ↑ thrust &nbsp;·&nbsp; ↓ drill down &nbsp;·&nbsp; I shop &nbsp;·&nbsp; ESC close</p>
+</div>
