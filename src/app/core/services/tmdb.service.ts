@@ -68,7 +68,16 @@ export class TmdbService {
       })
       .pipe(
         timeout(5000),
-        map((res) => res.results ?? []),
+        map((res) => {
+          const providers = res.results ?? [];
+          if (regionCode === 'ZA') {
+            const seenIds = new Set(providers.map((p) => p.provider_id));
+            for (const entry of this.FALLBACK_PROVIDER_ENTRIES) {
+              if (!seenIds.has(entry.provider_id)) providers.push(entry);
+            }
+          }
+          return providers;
+        }),
         catchError(() => of([]))
       );
   }
@@ -109,6 +118,11 @@ export class TmdbService {
 
   // Provider IDs not tracked by TMDB for ZA — fall back to global presence
   private readonly GLOBAL_FALLBACK_IDS = [337]; // Disney+ (Showmax has no TMDB entry)
+
+  // Full provider entries for GLOBAL_FALLBACK_IDS — used when TMDB omits them from a region's list
+  private readonly FALLBACK_PROVIDER_ENTRIES: WatchProvider[] = [
+    { provider_id: 337, provider_name: 'Disney Plus', logo_path: '/97yvRBw1GzX7fXprcF80er19ot.jpg' },
+  ];
 
   getWatchProviders(id: number, mediaType: 'movie' | 'tv'): Observable<WatchProvider[]> {
     const region = this.region();
