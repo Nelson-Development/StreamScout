@@ -20,6 +20,7 @@ export interface WatchlistItem {
 @Injectable({ providedIn: 'root' })
 export class SupabaseService {
   private supabase: SupabaseClient;
+  private readonly sessionReady: Promise<void>;
 
   currentUser = signal<User | null>(null);
 
@@ -29,13 +30,17 @@ export class SupabaseService {
       environment.supabase.anonKey
     );
 
-    this.supabase.auth.getSession().then(({ data }) => {
+    this.sessionReady = this.supabase.auth.getSession().then(({ data }) => {
       this.currentUser.set(data.session?.user ?? null);
     });
 
     this.supabase.auth.onAuthStateChange((_event, session) => {
       this.currentUser.set(session?.user ?? null);
     });
+  }
+
+  waitForSession(): Promise<void> {
+    return this.sessionReady;
   }
 
   // Auth
@@ -89,6 +94,11 @@ export class SupabaseService {
 
   async addToWatchlist(item: WatchlistItem): Promise<void> {
     const { error } = await this.supabase.from('watchlist').insert(item);
+    if (error) throw error;
+  }
+
+  async submitFeedback(userId: string, message: string): Promise<void> {
+    const { error } = await this.supabase.from('feedback').insert({ user_id: userId, message });
     if (error) throw error;
   }
 

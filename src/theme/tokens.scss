@@ -1,24 +1,35 @@
 :root {
   // Backgrounds
-  --bg-base:     #08080f;
-  --bg-surface:  #10101a;
-  --bg-elevated: #171724;
-  --bg-hover:    #1f1f30;
+  --bg-base:       #08080f;
+  --bg-surface:    #10101a;
+  --bg-elevated:   #171724;
+  --bg-hover:      #1f1f30;
+  --bg-base-glass: rgba(8, 8, 15, 0.8);   // navbar frosted glass
+  --overlay-bg:    rgba(0, 0, 0, 0.75);   // modal/backdrop
 
   // Borders
-  --border:       rgba(255, 255, 255, 0.07);
-  --border-focus: rgba(139, 92, 246, 0.6);
+  --border:        rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --border-focus:  rgba(139, 92, 246, 0.6);
 
   // Accent (purple)
-  --accent:       #8b5cf6;
-  --accent-dim:   rgba(139, 92, 246, 0.15);
-  --accent-glow:  rgba(139, 92, 246, 0.35);
-  --accent-hover: #7c3aed;
+  --accent:        #8b5cf6;
+  --accent-light:  #a78bfa;
+  --accent-dim:    rgba(139, 92, 246, 0.15);
+  --accent-glow:   rgba(139, 92, 246, 0.35);
+  --accent-strong: rgba(139, 92, 246, 0.8);
+  --accent-hover:  #7c3aed;
 
   // Semantic
-  --success:     #10b981;
-  --success-dim: rgba(16, 185, 129, 0.12);
-  --error:       #ef4444;
+  --success:        #10b981;
+  --success-dim:    rgba(16, 185, 129, 0.12);
+  --success-border: rgba(16, 185, 129, 0.2);
+  --success-glow:   rgba(16, 185, 129, 0.4);
+  --error:          #ef4444;
+  --error-dim:      rgba(239, 68, 68, 0.12);
+  --error-border:   rgba(239, 68, 68, 0.3);
+  --warning:        #fcd34d;
+  --info:           #3b82f6;
 
   // Text
   --text-primary:   #f0f0f8;
@@ -32,4 +43,7 @@
 
   // Motion
   --transition: 0.18s ease;
+
+  // Game-specific
+  --game-gold: #ffd700;
 }

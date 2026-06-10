@@ -65,6 +65,7 @@
     <section class="content-section">
       <div class="section-header">
         <h2>My Watchlist</h2>
+        <button class="btn-pick" (click)="pickerOpen.set(true)">🎲 Pick one</button>
       </div>
       <div class="scroll-row">
         @for (item of watchlist(); track item.movie_id) {
@@ -88,10 +89,12 @@
               }
               <div class="card-bottom">
                 <p class="card-title">{{ item.title }}</p>
-                @if (item.isAvailableNow) {
-                  <span class="available-pill">✓ Available</span>
+                @if (hoveredId() === item.movie_id) {
+                  @if (item.isAvailableNow) {
+                    <span class="available-pill">✓ Available</span>
+                  }
+                  <button class="btn-remove" (click)="removeFromWatchlist(item); $event.stopPropagation()">Remove</button>
                 }
-                <button class="btn-remove" (click)="removeFromWatchlist(item); $event.stopPropagation()">Remove</button>
               </div>
             </div>
           </div>
@@ -149,10 +152,12 @@
                         <span class="rating">★ {{ getRating(item) }}</span>
                       }
                     </div>
-                    @if (!isInWatchlist(item.id)) {
-                      <button class="btn-add" (click)="addToWatchlist(item); $event.stopPropagation()">+ Watchlist</button>
-                    } @else {
-                      <span class="in-list-label">In Watchlist</span>
+                    @if (hoveredId() === item.id) {
+                      @if (!isInWatchlist(item.id)) {
+                        <button class="btn-add" (click)="addToWatchlist(item); $event.stopPropagation()">+ Watchlist</button>
+                      } @else {
+                        <span class="in-list-label">In Watchlist</span>
+                      }
                     }
                   </div>
                 </div>
@@ -172,3 +177,9 @@
   }
 
 </div>
+
+@if (pickerOpen()) {
+  <app-watchlist-picker
+    [items]="watchlist()"
+    (closed)="pickerOpen.set(false)" />
+}

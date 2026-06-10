@@ -30,14 +30,14 @@
   transition: border-color 0.3s;
 
   &.fuel-critical {
-    border-color: rgba(239, 68, 68, 0.5);
+    border-color: var(--error-border);
     animation: hud-warn 0.8s ease-in-out infinite alternate;
   }
 }
 
 @keyframes hud-warn {
-  from { border-color: rgba(239, 68, 68, 0.3); }
-  to   { border-color: rgba(239, 68, 68, 0.8); }
+  from { border-color: var(--error-dim); }
+  to   { border-color: var(--error); }
 }
 
 .hud-stat {
@@ -70,9 +70,9 @@
   border-radius: 99px;
   transition: width 0.3s ease;
 
-  &.fuel { background: #3b82f6; }
+  &.fuel { background: var(--info); }
   &.hull { background: var(--success); }
-  &.low  { background: var(--danger) !important; animation: pulse 0.8s ease-in-out infinite alternate; }
+  &.low  { background: var(--error) !important; animation: pulse 0.8s ease-in-out infinite alternate; }
 }
 
 @keyframes pulse { from { opacity: 1; } to { opacity: 0.5; } }
@@ -81,7 +81,7 @@
   font-size: 0.72rem;
   font-family: monospace;
   transition: color 0.2s;
-  &.warn { color: var(--danger); font-weight: 700; }
+  &.warn { color: var(--error); font-weight: 700; }
   color: var(--text-secondary);
   min-width: 32px;
   text-align: right;
@@ -120,7 +120,7 @@
     font-size: 1rem;
     font-weight: 700;
     font-family: monospace;
-    color: #ffd700;
+    color: var(--game-gold);
   }
 }
 
@@ -134,9 +134,9 @@
   border-radius: 99px;
 
   &.full {
-    color: var(--danger);
-    border-color: var(--danger);
-    background: rgba(239, 68, 68, 0.1);
+    color: var(--error);
+    border-color: var(--error);
+    background: var(--error-dim);
   }
 }
 
@@ -200,13 +200,24 @@
     font-size: 1.1rem;
     font-weight: 700;
     font-family: monospace;
-    color: #ffd700;
+    color: var(--game-gold);
   }
 
-  .shop-close-hint {
-    font-size: 0.65rem;
+  .shop-close-btn {
+    background: none;
+    border: 1px solid var(--border);
     color: var(--text-muted);
-    font-family: monospace;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--transition), border-color var(--transition);
+
+    &:hover { color: var(--text-primary); border-color: var(--text-secondary); }
   }
 }
 
@@ -304,27 +315,19 @@
   font-size: 0.72rem;
   font-weight: 700;
   font-family: monospace;
-  color: #ffd700;
+  color: var(--game-gold);
   letter-spacing: 0.06em;
 }
 
 .sell-banner {
   background: var(--success-dim);
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  border: 1px solid var(--success-border);
   border-radius: var(--radius-sm);
   padding: 0.5rem 0.75rem;
   font-size: 0.8rem;
   color: var(--success);
   margin-bottom: 0.75rem;
   text-align: center;
-}
-
-.hint {
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 0.78rem;
-  margin: 0;
-  font-family: monospace;
 }
 
 // ─── Surface hint ────────────────────────────────────────────────────────────
@@ -335,7 +338,8 @@
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 1.5rem;
+  align-items: center;
+  gap: 1rem;
   z-index: 20;
 
   span {
@@ -345,7 +349,28 @@
     background: rgba(0,0,0,0.4);
     padding: 0.2rem 0.6rem;
     border-radius: 4px;
+    white-space: nowrap;
   }
+}
+
+.surface-shop-btn {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 35;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: monospace;
+  color: var(--text-primary);
+  background: rgba(139, 92, 246, 0.25);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 0.5rem 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--transition);
+
+  &:hover { background: rgba(139, 92, 246, 0.4); }
 }
 
 // ─── Game over ───────────────────────────────────────────────────────────────
@@ -373,7 +398,7 @@
     letter-spacing: -0.02em;
 
     &.reason-fuel { color: #ff6600; }
-    &.reason-hull { color: var(--danger); }
+    &.reason-hull { color: var(--error); }
   }
 
   p {
@@ -447,7 +472,7 @@
   touch-action: none;
 
   &:active, &.active {
-    background: rgba(139, 92, 246, 0.4);
+    background: var(--accent-glow);
     border-color: var(--accent);
     color: #fff;
   }

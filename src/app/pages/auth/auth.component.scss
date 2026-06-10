@@ -20,7 +20,7 @@
   &::before {
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
     top: -100px;
     left: -100px;
   }
@@ -28,7 +28,7 @@
   &::after {
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
     bottom: -100px;
     right: -100px;
   }
@@ -50,7 +50,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   margin: 0 0 0.3rem;
-  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+  background: linear-gradient(135deg, var(--accent-light), var(--accent-hover));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -134,12 +134,12 @@ h2 {
   border-radius: var(--radius-sm);
   background: var(--success-dim);
   color: var(--success);
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  border: 1px solid var(--success-border);
 
   &.error {
-    background: rgba(239, 68, 68, 0.1);
-    color: var(--danger);
-    border-color: rgba(239, 68, 68, 0.2);
+    background: var(--error-dim);
+    color: var(--error);
+    border-color: var(--error-border);
   }
 }
 

@@ -46,7 +46,7 @@
             <h3>Upgrade Garage</h3>
             <div class="shop-header-right">
               <span class="shop-cash">${{ gs.cash() }}</span>
-              <span class="shop-close-hint">ESC to close</span>
+              <button class="shop-close-btn" (click)="gs.shopOpen.set(false)">✕</button>
             </div>
           </div>
 
@@ -88,9 +88,9 @@
     <!-- Surface hint -->
     @if (gs.isOnSurface() && !gs.shopOpen() && !gs.gameOver()) {
       <div class="surface-hint">
-        <span>[ I ] Open shop</span>
         <span>Drive right to refuel</span>
       </div>
+      <button class="surface-shop-btn" (click)="gs.shopOpen.set(true)">🛒 Shop</button>
     }
 
     <!-- Virtual D-pad (mobile only) -->

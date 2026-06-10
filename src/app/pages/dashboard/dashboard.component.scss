@@ -43,7 +43,7 @@
   }
 
   &:hover:not(.active) {
-    border-color: rgba(255,255,255,0.15);
+    border-color: var(--border-strong);
     color: var(--text-primary);
   }
 
@@ -241,7 +241,7 @@
   }
 
   &:hover:not(.active) {
-    border-color: rgba(255,255,255,0.15);
+    border-color: var(--border-strong);
     color: var(--text-primary);
   }
 }
@@ -255,6 +255,9 @@
 .section-header {
   padding: 0 2rem;
   margin-bottom: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 
   h2 {
     font-size: 0.8rem;
@@ -263,6 +266,25 @@
     letter-spacing: 0.08em;
     color: var(--text-secondary);
     margin: 0;
+  }
+}
+
+.btn-pick {
+  background: var(--accent-dim);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 99px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), box-shadow var(--transition);
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 0 12px var(--accent-glow);
   }
 }
 
@@ -302,11 +324,11 @@
   }
 
   &.available {
-    border-color: rgba(16, 185, 129, 0.4);
-    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.2);
+    border-color: var(--success-glow);
+    box-shadow: 0 0 0 1px var(--success-border);
   }
 
-  &.in-watchlist { border-color: rgba(139, 92, 246, 0.35); }
+  &.in-watchlist { border-color: var(--accent-glow); }
 
   img {
     width: 100%;
@@ -343,7 +365,7 @@
     height: 24px;
     border-radius: 5px;
     object-fit: cover;
-    border: 1px solid rgba(255,255,255,0.15);
+    border: 1px solid var(--border-strong);
   }
 }
 
@@ -385,7 +407,7 @@
   color: rgba(255,255,255,0.6);
 }
 
-.rating { color: #fcd34d; }
+.rating { color: var(--warning); }
 
 .btn-add, .btn-remove {
   width: 100%;
@@ -399,15 +421,15 @@
 }
 
 .btn-add {
-  background: rgba(139, 92, 246, 0.8);
+  background: var(--accent-strong);
   color: #fff;
   &:hover { background: var(--accent); }
 }
 
 .btn-remove {
-  background: rgba(239, 68, 68, 0.7);
+  background: var(--error);
   color: #fff;
-  &:hover { background: var(--danger); }
+  &:hover { background: var(--accent-hover); }
 }
 
 .available-pill {
@@ -419,7 +441,7 @@
 
 .in-list-label {
   font-size: 0.68rem;
-  color: #a78bfa;
+  color: var(--accent-light);
   text-align: center;
   padding: 0.25rem 0;
 }
@@ -533,6 +555,8 @@
 
   .card-overlay {
     position: static;
+    width: 100%;
+    box-sizing: border-box;
     background: var(--bg-surface);
     padding: 0.4rem 0.5rem;
     opacity: 1;

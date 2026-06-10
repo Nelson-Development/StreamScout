@@ -3,7 +3,7 @@
   align-items: center;
   padding: 0 1.5rem;
   height: 60px;
-  background: rgba(8, 8, 15, 0.8);
+  background: var(--bg-base-glass);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
@@ -65,8 +65,8 @@
       color var(--transition);
 
     &:hover {
-      border-color: var(--danger);
-      color: var(--danger);
+      border-color: var(--error);
+      color: var(--error);
     }
   }
 
@@ -145,8 +145,8 @@
   text-align: center;
 
   &:hover {
-    border-color: var(--danger);
-    color: var(--danger);
+    border-color: var(--error);
+    color: var(--error);
   }
 }
 

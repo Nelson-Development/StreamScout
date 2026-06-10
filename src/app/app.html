@@ -34,3 +34,7 @@
 <main>
   <router-outlet />
 </main>
+
+@if (supabase.currentUser() && !currentUrl().startsWith('/game')) {
+  <app-feedback-button />
+}

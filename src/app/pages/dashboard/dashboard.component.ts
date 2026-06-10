@@ -3,6 +3,7 @@ import { EMPTY, Observable, forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { TmdbService, TmdbResult, Genre } from '@core/services/tmdb.service';
 import { SupabaseService, WatchlistItem } from '@core/services/supabase.service';
+import { WatchlistPickerComponent } from './watchlist-picker/watchlist-picker.component';
 
 export interface ContentSection { title: string; items: TmdbResult[]; }
 export interface WatchlistDisplayItem extends WatchlistItem { isAvailableNow: boolean; }
@@ -10,6 +11,7 @@ export interface WatchlistDisplayItem extends WatchlistItem { isAvailableNow: bo
 @Component({
   selector: 'app-dashboard',
   standalone: true,
+  imports: [WatchlistPickerComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -19,6 +21,7 @@ export class DashboardComponent implements OnInit {
 
   activeTab        = signal<'movie' | 'tv'>('movie');
   myServicesOnly   = signal(false);
+  pickerOpen       = signal(false);
   movieSections    = signal<ContentSection[]>([]);
   tvSections       = signal<ContentSection[]>([]);
   watchlist        = signal<WatchlistDisplayItem[]>([]);
@@ -149,13 +152,15 @@ export class DashboardComponent implements OnInit {
   async addToWatchlist(item: TmdbResult) {
     const user = this.supabase.currentUser();
     if (!user) return;
+    const entry: WatchlistItem = {
+      user_id: user.id, movie_id: item.id,
+      title: item.title ?? item.name ?? '',
+      poster_path: item.poster_path ?? '',
+      media_type: item.media_type as 'movie' | 'tv',
+    };
     try {
-      await this.supabase.addToWatchlist({
-        user_id: user.id, movie_id: item.id,
-        title: item.title ?? item.name ?? '',
-        poster_path: item.poster_path ?? '',
-        media_type: item.media_type as 'movie' | 'tv',
-      });
+      await this.supabase.addToWatchlist(entry);
+      this.watchlist.update((list) => [...list, { ...entry, isAvailableNow: false }]);
     } catch {}
   }
 

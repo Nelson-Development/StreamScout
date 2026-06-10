@@ -98,7 +98,7 @@
   transition: border-color var(--transition), background var(--transition), transform var(--transition), box-shadow var(--transition);
 
   &:hover {
-    border-color: rgba(255,255,255,0.15);
+    border-color: var(--border-strong);
     background: var(--bg-elevated);
     transform: translateY(-2px);
   }
@@ -164,7 +164,7 @@
 }
 
 .error-msg {
-  color: var(--error, #f87171);
+  color: var(--error);
   font-size: 0.875rem;
   font-weight: 500;
   display: flex;

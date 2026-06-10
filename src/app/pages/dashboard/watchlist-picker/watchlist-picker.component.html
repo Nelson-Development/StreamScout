@@ -1,0 +1,89 @@
+<div class="picker-backdrop" (click)="closed.emit()">
+  <div class="picker-modal" (click)="$event.stopPropagation()">
+
+    <!-- ── SELECT PHASE ─────────────────────────────────────────── -->
+    @if (phase() === 'select') {
+      <div class="picker-header">
+        <h3>Pick for Tonight</h3>
+        <button class="close-btn" (click)="closed.emit()">✕</button>
+      </div>
+
+      <div class="selection-bar">
+        <span class="sel-count">{{ selectedCount() }} selected</span>
+        <div class="sel-actions">
+          <button class="sel-btn" (click)="selectAll()">All</button>
+          <button class="sel-btn" (click)="deselectAll()">None</button>
+        </div>
+      </div>
+
+      <div class="item-list">
+        @for (item of items(); track item.movie_id) {
+          <label class="item-row" [class.checked]="isChecked(item.movie_id)">
+            <img class="item-poster" [src]="getPosterUrl(item.poster_path)"
+                 [alt]="item.title" (error)="onImageError($event)" />
+            <span class="item-title">{{ item.title }}</span>
+            <span class="item-type">{{ item.media_type }}</span>
+            <div class="item-check" [class.on]="isChecked(item.movie_id)">
+              @if (isChecked(item.movie_id)) { ✓ }
+            </div>
+            <input type="checkbox" [checked]="isChecked(item.movie_id)"
+                   (change)="toggle(item.movie_id)" />
+          </label>
+        }
+      </div>
+
+      <div class="picker-footer">
+        <button class="btn-choose" [disabled]="selectedCount() < 2" (click)="spin()">
+          Choose
+        </button>
+        @if (selectedCount() < 2) {
+          <span class="choose-hint">Select at least 2 to spin</span>
+        }
+      </div>
+    }
+
+    <!-- ── SPIN / RESULT PHASE ───────────────────────────────────── -->
+    @if (phase() === 'spin' || phase() === 'result') {
+      <div class="picker-header">
+        <h3>{{ phase() === 'result' ? "Tonight's Pick!" : 'Scanning...' }}</h3>
+        @if (phase() === 'result') {
+          <button class="close-btn" (click)="closed.emit()">✕</button>
+        }
+      </div>
+
+      <div class="reel-window">
+        <div class="reel-edge left"></div>
+        <div class="reel-edge right"></div>
+        <div class="reel-notch top"></div>
+        <div class="reel-notch bottom"></div>
+
+        <div class="reel-strip" #reelStrip>
+          @for (item of reelItems(); track $index) {
+            <div class="reel-item" [class.winner]="phase() === 'result' && $index === winnerReelIndex">
+              <img [src]="getPosterUrl(item.poster_path)"
+                   [alt]="item.title" (error)="onImageError($event)" />
+            </div>
+          }
+        </div>
+      </div>
+
+      @if (phase() === 'result' && winner()) {
+        <div class="result-card">
+          <img class="result-poster"
+               [src]="getPosterUrl(winner()!.poster_path)"
+               [alt]="winner()!.title"
+               (error)="onImageError($event)" />
+          <div class="result-info">
+            <div class="result-title">{{ winner()!.title }}</div>
+            <div class="result-type">{{ winner()!.media_type }}</div>
+          </div>
+        </div>
+        <div class="picker-footer">
+          <button class="btn-secondary" (click)="reset()">Spin again</button>
+          <button class="btn-choose" (click)="closed.emit()">Let's watch!</button>
+        </div>
+      }
+    }
+
+  </div>
+</div>
