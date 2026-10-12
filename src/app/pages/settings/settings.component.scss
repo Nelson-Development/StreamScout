@@ -47,7 +47,10 @@
   font-size: 0.875rem;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    color 0.15s,
+    background 0.15s;
   text-align: left;
 
   &:hover {
@@ -95,7 +98,11 @@
   align-items: center;
   gap: 0.65rem;
   cursor: pointer;
-  transition: border-color var(--transition), background var(--transition), transform var(--transition), box-shadow var(--transition);
+  transition:
+    border-color var(--transition),
+    background var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition);
 
   &:hover {
     border-color: var(--border-strong);
@@ -123,7 +130,9 @@
     background: var(--accent-dim);
     box-shadow: 0 0 0 1px var(--accent);
 
-    span { color: var(--text-primary); }
+    span {
+      color: var(--text-primary);
+    }
   }
 
   .check {
@@ -163,6 +172,58 @@
   }
 }
 
+.backup-copy {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin: 0 0 0.85rem;
+}
+
+.backup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.btn-secondary {
+  padding: 0.55rem 0.9rem;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--accent);
+  }
+}
+
+.file-btn {
+  position: relative;
+  overflow: hidden;
+
+  input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+}
+
+.share-field {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-size: 0.75rem;
+}
+
 .error-msg {
   color: var(--error);
   font-size: 0.875rem;
@@ -178,13 +239,20 @@
 }
 
 @media (max-width: 640px) {
-  .settings-page { padding: 1.5rem 1rem 4rem; }
+  .settings-page {
+    padding: 1.5rem 1rem 4rem;
+  }
 
   .provider-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 0.6rem;
   }
 
-  .actions { flex-direction: column; align-items: stretch; }
-  .btn-primary { text-align: center; }
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .btn-primary {
+    text-align: center;
+  }
 }

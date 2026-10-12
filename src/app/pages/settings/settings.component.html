@@ -1,7 +1,10 @@
 <div class="settings-page">
   <div class="page-header">
     <h2>My Streaming Services</h2>
-    <p>Select your region and the services you currently subscribe to — we'll highlight matches when you search.</p>
+    <p>
+      Select your region and the services you currently subscribe to — we'll highlight matches when
+      you search.
+    </p>
   </div>
 
   <!-- Region selector -->
@@ -24,6 +27,7 @@
 
   <!-- Streaming providers -->
   <div class="section-label">Your Services</div>
+  <p class="jw-credit">Provider list and logos from JustWatch, via TMDB.</p>
   @if (loadingProviders()) {
     <div class="providers-loading">Loading services for your region…</div>
   } @else if (providers().length === 0) {
@@ -45,6 +49,35 @@
         </button>
       }
     </div>
+  }
+
+  <div class="section-label">Backup</div>
+  <p class="backup-copy">
+    Services and your watchlist stay in this browser. Export a file or copy a link to move them to
+    another device.
+  </p>
+  <div class="backup-actions">
+    <button class="btn-secondary" type="button" (click)="exportFile()">Export JSON</button>
+    <label class="btn-secondary file-btn">
+      Import JSON
+      <input type="file" accept="application/json,.json" (change)="onImport($event)" />
+    </label>
+    <button class="btn-secondary" type="button" (click)="copyShareLink()">Copy share link</button>
+  </div>
+  @if (shareLink()) {
+    <input
+      class="share-field"
+      type="text"
+      readonly
+      [value]="shareLink()"
+      (focus)="selectShare($event)"
+    />
+  }
+  @if (dataMessage()) {
+    <p class="saved-msg">{{ dataMessage() }}</p>
+  }
+  @if (dataError()) {
+    <p class="error-msg">{{ dataError() }}</p>
   }
 
   <div class="actions">

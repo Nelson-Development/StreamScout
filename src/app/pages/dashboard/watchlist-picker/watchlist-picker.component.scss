@@ -50,7 +50,9 @@
   padding: 0.25rem 0.5rem;
   border-radius: var(--radius-sm);
   transition: color var(--transition);
-  &:hover { color: var(--text-primary); }
+  &:hover {
+    color: var(--text-primary);
+  }
 }
 
 // ── Selection bar ────────────────────────────────────────────────────
@@ -69,7 +71,10 @@
   color: var(--text-muted);
 }
 
-.sel-actions { display: flex; gap: 0.4rem; }
+.sel-actions {
+  display: flex;
+  gap: 0.4rem;
+}
 
 .sel-btn {
   background: var(--bg-elevated);
@@ -80,8 +85,13 @@
   font-size: 0.72rem;
   font-weight: 500;
   cursor: pointer;
-  transition: border-color var(--transition), color var(--transition);
-  &:hover { border-color: var(--accent); color: var(--text-primary); }
+  transition:
+    border-color var(--transition),
+    color var(--transition);
+  &:hover {
+    border-color: var(--accent);
+    color: var(--text-primary);
+  }
 }
 
 // ── Item list ────────────────────────────────────────────────────────
@@ -102,11 +112,19 @@
   transition: background var(--transition);
   border-bottom: 1px solid var(--border);
 
-  &:last-child { border-bottom: none; }
-  &:hover      { background: var(--bg-hover); }
-  &.checked    { background: var(--accent-dim); }
+  &:last-child {
+    border-bottom: none;
+  }
+  &:hover {
+    background: var(--bg-hover);
+  }
+  &.checked {
+    background: var(--accent-dim);
+  }
 
-  input[type='checkbox'] { display: none; }
+  input[type='checkbox'] {
+    display: none;
+  }
 }
 
 .item-poster {
@@ -146,7 +164,9 @@
   font-size: 0.65rem;
   color: #fff;
   flex-shrink: 0;
-  transition: background var(--transition), border-color var(--transition);
+  transition:
+    background var(--transition),
+    border-color var(--transition);
 
   &.on {
     background: var(--accent);
@@ -180,13 +200,18 @@
   font-weight: 700;
   cursor: pointer;
   letter-spacing: 0.02em;
-  transition: background var(--transition), box-shadow var(--transition);
+  transition:
+    background var(--transition),
+    box-shadow var(--transition);
 
   &:hover:not(:disabled) {
     background: var(--accent-hover);
     box-shadow: 0 0 20px var(--accent-glow);
   }
-  &:disabled { opacity: 0.4; cursor: not-allowed; }
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
 }
 
 .btn-secondary {
@@ -198,8 +223,13 @@
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: border-color var(--transition), color var(--transition);
-  &:hover { border-color: var(--text-secondary); color: var(--text-primary); }
+  transition:
+    border-color var(--transition),
+    color var(--transition);
+  &:hover {
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
+  }
 }
 
 // ── Reel ─────────────────────────────────────────────────────────────
@@ -222,8 +252,14 @@
   z-index: 2;
   pointer-events: none;
 
-  &.left  { left: 0;  background: linear-gradient(to right, var(--bg-base), transparent); }
-  &.right { right: 0; background: linear-gradient(to left,  var(--bg-base), transparent); }
+  &.left {
+    left: 0;
+    background: linear-gradient(to right, var(--bg-base), transparent);
+  }
+  &.right {
+    right: 0;
+    background: linear-gradient(to left, var(--bg-base), transparent);
+  }
 }
 
 // Center notch indicators
@@ -265,7 +301,9 @@
   overflow: hidden;
   border: 1px solid var(--border);
   opacity: 0.7;
-  transition: opacity 0.3s, border-color 0.3s;
+  transition:
+    opacity 0.3s,
+    border-color 0.3s;
 
   img {
     width: 100%;
@@ -296,7 +334,9 @@
   flex-shrink: 0;
 }
 
-.result-info { flex: 1; }
+.result-info {
+  flex: 1;
+}
 
 .result-title {
   font-size: 1rem;

@@ -1,15 +1,19 @@
 <div class="dashboard">
-
   <!-- Tab toggle + filter -->
   <div class="tab-bar">
-    <button class="tab" [class.active]="activeTab() === 'movie'" (click)="setTab('movie')">Movies</button>
-    <button class="tab" [class.active]="activeTab() === 'tv'"    (click)="setTab('tv')">Series</button>
+    <button class="tab" [class.active]="activeTab() === 'movie'" (click)="setTab('movie')">
+      Movies
+    </button>
+    <button class="tab" [class.active]="activeTab() === 'tv'" (click)="setTab('tv')">Series</button>
 
     <div class="filters">
       <!-- Genre dropdown -->
       <div class="genre-dropdown">
-        <button class="filter-btn" [class.active]="selectedGenres().length > 0"
-                (click)="genreDropdownOpen.set(!genreDropdownOpen())">
+        <button
+          class="filter-btn"
+          [class.active]="selectedGenres().length > 0"
+          (click)="genreDropdownOpen.set(!genreDropdownOpen())"
+        >
           Genre
           @if (selectedGenres().length > 0) {
             <span class="count-badge">{{ selectedGenres().length }}</span>
@@ -30,8 +34,11 @@
             <div class="genre-list">
               @for (genre of genres(); track genre.id) {
                 <label class="genre-item" [class.checked]="isGenreSelected(genre.id)">
-                  <input type="checkbox" [checked]="isGenreSelected(genre.id)"
-                         (change)="toggleGenre(genre.id)" />
+                  <input
+                    type="checkbox"
+                    [checked]="isGenreSelected(genre.id)"
+                    (change)="toggleGenre(genre.id)"
+                  />
                   <span class="genre-name">{{ genre.name }}</span>
                   @if (isGenreSelected(genre.id)) {
                     <span class="genre-check">✓</span>
@@ -44,7 +51,11 @@
       </div>
 
       <!-- My services toggle -->
-      <button class="services-toggle" [class.active]="myServicesOnly()" (click)="toggleMyServices()">
+      <button
+        class="services-toggle"
+        [class.active]="myServicesOnly()"
+        (click)="toggleMyServices()"
+      >
         <span class="toggle-dot"></span>
         My services only
       </button>
@@ -68,32 +79,52 @@
         <button class="btn-pick" (click)="pickerOpen.set(true)">🎲 Pick one</button>
       </div>
       <div class="scroll-row">
-        @for (item of watchlist(); track item.movie_id) {
-          <div class="poster-card" [class.available]="item.isAvailableNow"
-               (mouseenter)="onHover(item.movie_id, item.media_type)" (mouseleave)="onLeave()"
-               (click)="onCardTap(item.movie_id, item.media_type)">
-            <img [src]="getPosterUrl(item.poster_path)" [alt]="item.title" loading="lazy"
-                 (error)="onImageError($event)" />
+        @for (item of watchlist(); track item.media_type + '-' + item.movie_id) {
+          <div
+            class="poster-card"
+            [class.available]="item.isAvailableNow"
+            (mouseenter)="onHover(item.movie_id, item.media_type)"
+            (mouseleave)="onLeave()"
+            (click)="onCardTap(item.movie_id, item.media_type)"
+          >
+            <img
+              [src]="getPosterUrl(item.poster_path)"
+              [alt]="item.title"
+              loading="lazy"
+              (error)="onImageError($event)"
+            />
             <div class="card-overlay">
-              @if (hoveredId() === item.movie_id) {
+              @if (isHovered(item.movie_id, item.media_type)) {
                 @if (hoveredProviders().length > 0) {
                   <div class="card-providers">
                     @for (p of hoveredProviders(); track p.provider_id) {
-                      <img [src]="getLogoUrl(p.logo_path)" [alt]="p.provider_name" [title]="p.provider_name"
-                           (error)="onLogoError($event)" />
+                      <img
+                        [src]="getLogoUrl(p.logo_path)"
+                        [alt]="p.provider_name"
+                        [title]="p.provider_name"
+                        (error)="onLogoError($event)"
+                      />
                     }
                   </div>
                 } @else if (hoveredLoaded()) {
                   <div class="card-providers"><span class="na-label">N/A</span></div>
                 }
+                @if (hoveredLoaded()) {
+                  <span class="jw-credit">Provider data by JustWatch</span>
+                }
               }
               <div class="card-bottom">
                 <p class="card-title">{{ item.title }}</p>
-                @if (hoveredId() === item.movie_id) {
+                @if (isHovered(item.movie_id, item.media_type)) {
                   @if (item.isAvailableNow) {
                     <span class="available-pill">✓ Available</span>
                   }
-                  <button class="btn-remove" (click)="removeFromWatchlist(item); $event.stopPropagation()">Remove</button>
+                  <button
+                    class="btn-remove"
+                    (click)="removeFromWatchlist(item); $event.stopPropagation()"
+                  >
+                    Remove
+                  </button>
                 }
               </div>
             </div>
@@ -106,11 +137,11 @@
   <!-- Discovery sections -->
   @if (loading()) {
     <div class="loading-grid">
-      @for (s of [1,2,3,4,5]; track s) {
+      @for (s of [1, 2, 3, 4, 5]; track s) {
         <div class="skeleton-section">
           <div class="skeleton-label"></div>
           <div class="skeleton-row">
-            @for (c of [1,2,3,4,5,6,7]; track c) {
+            @for (c of [1, 2, 3, 4, 5, 6, 7]; track c) {
               <div class="skeleton-card"></div>
             }
           </div>
@@ -126,22 +157,37 @@
           </div>
           <div class="scroll-row">
             @for (item of section.items; track item.id) {
-              <div class="poster-card" [class.in-watchlist]="isInWatchlist(item.id)"
-                   (mouseenter)="onHover(item.id, item.media_type)" (mouseleave)="onLeave()"
-                   (click)="onCardTap(item.id, item.media_type)">
-                <img [src]="getPosterUrl(item.poster_path)" [alt]="getTitle(item)" loading="lazy"
-                     (error)="onImageError($event)" />
+              <div
+                class="poster-card"
+                [class.in-watchlist]="isInWatchlist(item.id, item.media_type)"
+                (mouseenter)="onHover(item.id, item.media_type)"
+                (mouseleave)="onLeave()"
+                (click)="onCardTap(item.id, item.media_type)"
+              >
+                <img
+                  [src]="getPosterUrl(item.poster_path)"
+                  [alt]="getTitle(item)"
+                  loading="lazy"
+                  (error)="onImageError($event)"
+                />
                 <div class="card-overlay">
-                  @if (hoveredId() === item.id) {
+                  @if (isHovered(item.id, item.media_type)) {
                     @if (hoveredProviders().length > 0) {
                       <div class="card-providers">
                         @for (p of hoveredProviders(); track p.provider_id) {
-                          <img [src]="getLogoUrl(p.logo_path)" [alt]="p.provider_name" [title]="p.provider_name"
-                               (error)="onLogoError($event)" />
+                          <img
+                            [src]="getLogoUrl(p.logo_path)"
+                            [alt]="p.provider_name"
+                            [title]="p.provider_name"
+                            (error)="onLogoError($event)"
+                          />
                         }
                       </div>
                     } @else if (hoveredLoaded()) {
                       <div class="card-providers"><span class="na-label">N/A</span></div>
+                    }
+                    @if (hoveredLoaded()) {
+                      <span class="jw-credit">Provider data by JustWatch</span>
                     }
                   }
                   <div class="card-bottom">
@@ -152,9 +198,14 @@
                         <span class="rating">★ {{ getRating(item) }}</span>
                       }
                     </div>
-                    @if (hoveredId() === item.id) {
-                      @if (!isInWatchlist(item.id)) {
-                        <button class="btn-add" (click)="addToWatchlist(item); $event.stopPropagation()">+ Watchlist</button>
+                    @if (isHovered(item.id, item.media_type)) {
+                      @if (!isInWatchlist(item.id, item.media_type)) {
+                        <button
+                          class="btn-add"
+                          (click)="addToWatchlist(item); $event.stopPropagation()"
+                        >
+                          + Watchlist
+                        </button>
                       } @else {
                         <span class="in-list-label">In Watchlist</span>
                       }
@@ -170,16 +221,14 @@
   } @else {
     <div class="empty-state">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.35-4.35" />
       </svg>
       <p>No results for these filters. Try changing genre or toggling your services.</p>
     </div>
   }
-
 </div>
 
 @if (pickerOpen()) {
-  <app-watchlist-picker
-    [items]="watchlist()"
-    (closed)="pickerOpen.set(false)" />
+  <app-watchlist-picker [items]="watchlist()" (closed)="pickerOpen.set(false)" />
 }

@@ -1,59 +1,56 @@
-# Streamfinder
+# StreamScout
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.14.
+StreamScout is a static website for browsing what is on the streaming services you actually subscribe to. The default region is South Africa. Pick your services, then browse trending, popular, and top-rated movies and series, search for a title, and keep a watchlist on this device.
 
-## Development server
+There is no account and no server. Chosen services and the watchlist live in the browser.
 
-To start a local development server, run:
+## Run it
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Requires Node.js 22.22 or newer (Angular CLI 22).
 
 ```bash
-ng generate component component-name
+npm ci
+npm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Open http://localhost:4200/.
+
+Production build:
 
 ```bash
-ng generate --help
+npm run build
 ```
 
-## Building
+The static files are written to `dist/streamfinder/browser`. Any static host works. `vercel.json` and `public/_redirects` send unknown paths back to `index.html` so client-side routes keep working.
 
-To build the project run:
+## How data is stored
 
-```bash
-ng build
-```
+Everything is under the localStorage key `ss:v1`:
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- region (default `ZA`)
+- selected streaming service ids
+- watchlist entries, keyed by media type and TMDB id so a movie and a series that share an id do not collide
 
-## Running unit tests
+Adding a title that is already on the watchlist does nothing.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### Move your library
 
-```bash
-ng test
-```
+On Settings:
 
-## Running end-to-end tests
+- **Export JSON** downloads `streamscout-library.json`.
+- **Import JSON** replaces the services and watchlist on this device.
+- **Copy share link** puts the same snapshot in the URL hash (`#s=...`). Opening that link on another device replaces the library there, then the hash is removed. Large watchlists make a long link; use the JSON file if the link is unwieldy.
 
-For end-to-end (e2e) testing, run:
+## TMDB
 
-```bash
-ng e2e
-```
+Catalogue, posters, genres, and streaming providers come from [TMDB](https://www.themoviedb.org/). The read token is in `src/environments/environment.ts` (and `environment.prod.ts` for production builds). It is a public read-only key and is shipped in the browser bundle.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Provider lists for the settings picker come from TMDB's live `/watch/providers` results for the selected region (movies and series combined). Responses are cached in the browser: genres for 7 days, provider lists and per-title providers for 24 hours, browse rows for 6 hours, and search for 1 hour.
 
-## Additional Resources
+This product uses the TMDB API but is not endorsed or certified by TMDB. Streaming provider data is supplied by JustWatch.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Disney+ in South Africa is not listed by TMDB's ZA catalogue. The app keeps its existing fallback: Disney+ is offered in the picker, and availability falls back to global presence. That behaviour is intentional.
+
+## Missing posters
+
+Titles without a poster use `assets/no-poster.png`. If that image also fails, the page does not retry it in a loop.
