@@ -3,13 +3,12 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
-      "@core/*":         ["src/app/core/*"],
-      "@pages/*":        ["src/app/pages/*"],
-      "@shared/*":       ["src/app/shared/*"],
-      "@environments/*": ["src/environments/*"],
-      "@theme/*":        ["src/theme/*"]
+      "@core/*": ["./src/app/core/*"],
+      "@pages/*": ["./src/app/pages/*"],
+      "@shared/*": ["./src/app/shared/*"],
+      "@environments/*": ["./src/environments/*"],
+      "@theme/*": ["./src/theme/*"]
     },
     "strict": true,
     "noImplicitOverride": true,

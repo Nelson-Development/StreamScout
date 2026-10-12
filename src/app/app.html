@@ -1,40 +1,54 @@
-@if (supabase.currentUser()) {
-  <nav class="navbar">
-    <a class="brand" routerLink="/dashboard" (click)="closeMenu()">
-      <img src="brand/StreamScout-lockup-horizontal.svg" alt="StreamScout" class="brand-logo" />
-    </a>
+<nav class="navbar">
+  <a class="brand" routerLink="/dashboard" (click)="closeMenu()">
+    <img src="brand/StreamScout-lockup-horizontal.svg" alt="StreamScout" class="brand-logo" />
+  </a>
 
-    <!-- Desktop links -->
-    <div class="nav-links">
-      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-      <a routerLink="/search"    routerLinkActive="active">Search</a>
-      <a routerLink="/settings"  routerLinkActive="active">Settings</a>
-      <a routerLink="/game"      routerLinkActive="active">Game</a>
-    </div>
-    <button class="sign-out desktop-only" (click)="signOut()">Sign Out</button>
+  <div class="nav-links">
+    <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+    <a routerLink="/search" routerLinkActive="active">Search</a>
+    <a routerLink="/settings" routerLinkActive="active">Settings</a>
+  </div>
 
-    <!-- Hamburger -->
-    <button class="hamburger" (click)="menuOpen.update(v => !v)" [class.open]="menuOpen()">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
+  <button
+    class="hamburger"
+    type="button"
+    (click)="menuOpen.update((v) => !v)"
+    [class.open]="menuOpen()"
+    [attr.aria-expanded]="menuOpen()"
+    aria-label="Menu"
+  >
+    <span></span><span></span><span></span>
+  </button>
+</nav>
 
-  <!-- Mobile menu -->
-  @if (menuOpen()) {
-    <div class="mobile-menu">
-      <a routerLink="/dashboard" routerLinkActive="active" (click)="closeMenu()">Dashboard</a>
-      <a routerLink="/search"    routerLinkActive="active" (click)="closeMenu()">Search</a>
-      <a routerLink="/settings"  routerLinkActive="active" (click)="closeMenu()">Settings</a>
-      <a routerLink="/game"      routerLinkActive="active" (click)="closeMenu()">Game</a>
-      <button class="sign-out-mobile" (click)="signOut()">Sign Out</button>
-    </div>
-  }
+@if (menuOpen()) {
+  <div class="mobile-menu">
+    <a routerLink="/dashboard" routerLinkActive="active" (click)="closeMenu()">Dashboard</a>
+    <a routerLink="/search" routerLinkActive="active" (click)="closeMenu()">Search</a>
+    <a routerLink="/settings" routerLinkActive="active" (click)="closeMenu()">Settings</a>
+  </div>
+}
+
+@if (shared()) {
+  <div class="share-banner" role="status">
+    <span
+      >Opened a shared library from this link. Services and watchlist on this device were
+      replaced.</span
+    >
+    <button type="button" (click)="shared.set(false)">OK</button>
+  </div>
 }
 
 <main>
   <router-outlet />
 </main>
 
-@if (supabase.currentUser() && !currentUrl().startsWith('/game')) {
-  <app-feedback-button />
-}
+<footer class="site-footer">
+  <a class="tmdb-link" href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer">
+    <img src="brand/tmdb-logo.svg" alt="The Movie Database (TMDB)" class="tmdb-logo" />
+  </a>
+  <p>
+    This product uses the TMDB API but is not endorsed or certified by TMDB. Streaming provider data
+    is supplied by JustWatch.
+  </p>
+</footer>

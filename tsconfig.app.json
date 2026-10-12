@@ -5,15 +5,22 @@
   "compilerOptions": {
     "outDir": "./out-tsc/app",
     "types": [],
-    "baseUrl": ".",
     "paths": {
-      "@core/*":         ["src/app/core/*"],
-      "@pages/*":        ["src/app/pages/*"],
-      "@shared/*":       ["src/app/shared/*"],
-      "@environments/*": ["src/environments/*"],
-      "@theme/*":        ["src/theme/*"]
+      "@core/*": ["./src/app/core/*"],
+      "@pages/*": ["./src/app/pages/*"],
+      "@shared/*": ["./src/app/shared/*"],
+      "@environments/*": ["./src/environments/*"],
+      "@theme/*": ["./src/theme/*"]
     }
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.spec.ts"]
+  "exclude": ["src/**/*.spec.ts"],
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    }
+  }
 }

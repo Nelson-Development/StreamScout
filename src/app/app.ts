@@ -1,37 +1,35 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { SupabaseService } from '@core/services/supabase.service';
+import { LibraryService } from '@core/services/library.service';
 import { LoaderService } from '@core/services/loader.service';
-import { FeedbackButtonComponent } from '@core/components/feedback/feedback-button.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, FeedbackButtonComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './app.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './app.scss',
 })
 export class App implements OnInit {
-  supabase    = inject(SupabaseService);
-  router      = inject(Router);
-  loader      = inject(LoaderService);
-  menuOpen    = signal(false);
-  currentUrl  = signal(this.router.url);
+  private library = inject(LibraryService);
+  router = inject(Router);
+  loader = inject(LoaderService);
+  menuOpen = signal(false);
+  shared = signal(false);
 
-  async ngOnInit() {
-    this.router.events.pipe(filter(e => e instanceof NavigationEnd))
-      .subscribe((e) => this.currentUrl.set((e as NavigationEnd).urlAfterRedirects));
+  ngOnInit() {
+    this.router.events
+      .pipe(filter((e) => e instanceof NavigationEnd))
+      .subscribe(() => this.menuOpen.set(false));
 
-    await this.supabase.waitForSession();
+    // Dismiss the splash as soon as the shell is up. It must not wait on network.
+    this.shared.set(this.library.consumeShareFromLocation());
     this.loader.done();
   }
 
-  async signOut() {
-    await this.supabase.signOut();
+  closeMenu() {
     this.menuOpen.set(false);
-    this.router.navigate(['/auth']);
   }
-
-  closeMenu() { this.menuOpen.set(false); }
 }
